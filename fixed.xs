@@ -16,22 +16,6 @@ static OP *parse_fixed(pTHX_ GV *namegv, SV *psobj, U32 *flagsp)
     lex_stuff_pv("my ", 0);
     fixed_op = parse_fullexpr(0);
     
-    // okay this works but it won't scale, and it is *ass* ugly.
-    // I need to find a better way to hack the OP tree
-    OP *pad_op;
-    switch(fixed_op->op_type) {
-        case OP_SASSIGN:
-            pad_op = ((BINOP*)fixed_op)->op_last;
-            break;
-    }
-    // And this doesn't work. Or rather it does, just not in a useful way. 
-    // It sets the SV to read-only before the expression is evaluated ...
-    // instant "Modification of a read-only value attempted" error \o/
-    if (pad_op->op_type == OP_PADSV) {    
-        SvREADONLY_on(PAD_SV(pad_op->op_targ));
-    }
-
-    op_dump(fixed_op);
     return fixed_op;
 }
 
@@ -42,8 +26,10 @@ PROTOTYPES: DISABLE
 void
 fixed (...)
   CODE:
-    PERL_UNUSED_ARG(items);
-    // croak("fixed called as a function");
+    int i;
+    for(i = 0;i < items; i++) {
+        SvREADONLY_on(ST(i));
+    }
 
 BOOT: 
 {
