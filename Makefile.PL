@@ -38,7 +38,6 @@ my %WriteMakefileArgs = (
   'NAME' => 'fixed',
   'OBJECT' => '$(BASEEXT)$(OBJ_EXT)',
   'PREREQ_PM' => {
-    'Devel::CallChecker' => '0',
     'Devel::CallParser' => '0',
     'Sub::Exporter' => '0',
     'XSLoader' => '0',
