@@ -13,12 +13,24 @@ static OP *parse_fixed(pTHX_ GV *namegv, SV *psobj, U32 *flagsp)
     PERL_UNUSED_ARG(psobj);
     PERL_UNUSED_ARG(flagsp);
 
-
-
     *flagsp |= CALLPARSER_STATEMENT;
-    // lex_stuff_pv("my ", 0);
-    fixed_op = parse_barestmt(0);
-    /* now we just gotta crawl stmnt and set SvREADONLY_on() on the SVs we just assigned. */
+    lex_stuff_pv("my ", 0);
+    fixed_op = parse_fullexpr(0);
+    
+    // okay this works but it won't scale, and it is *ass* ugly.
+    // I need to find a better way to hack the OP tree
+    OP *pad_op;
+    switch(fixed_op->op_type) {
+        case OP_SASSIGN:
+            pad_op = ((BINOP*)fixed_op)->op_last;
+            break;
+    }
+            
+    if (pad_op->op_type == OP_PADSV) {    
+        SvREADONLY_on(PAD_SV(pad_op->op_targ));
+    }
+
+    op_dump(fixed_op);
     return fixed_op;
 }
 
@@ -30,7 +42,7 @@ void
 fixed (...)
   CODE:
     PERL_UNUSED_ARG(items);
-    croak("fixed called as a function");
+    // croak("fixed called as a function");
 
 BOOT: 
 {
