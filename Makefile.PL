@@ -22,8 +22,8 @@ sub write_header {
 use ExtUtils::MakeMaker 6.30;
  
 my %WriteMakefileArgs = (
-  'ABSTRACT' => 'conditionals as expressions',
-  'AUTHOR' => 'Florian Ragwitz <rafl@debian.org>',
+  'ABSTRACT' => 'fixed "variables" ala Erlang',
+  'AUTHOR' => 'Chris Prather <chris@prather.org>',
   'BUILD_REQUIRES' => {
     'Test::More' => '0'
   },
