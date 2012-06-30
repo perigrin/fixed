@@ -1,6 +1,5 @@
 #include "EXTERN.h"
 #include "perl.h"
-#include "callchecker0.h"
 #include "callparser.h"
 #include "XSUB.h"
 
@@ -25,7 +24,9 @@ static OP *parse_fixed(pTHX_ GV *namegv, SV *psobj, U32 *flagsp)
             pad_op = ((BINOP*)fixed_op)->op_last;
             break;
     }
-            
+    // And this doesn't work. Or rather it does, just not in a useful way. 
+    // It sets the SV to read-only before the expression is evaluated ...
+    // instant "Modification of a read-only value attempted" error \o/
     if (pad_op->op_type == OP_PADSV) {    
         SvREADONLY_on(PAD_SV(pad_op->op_targ));
     }
