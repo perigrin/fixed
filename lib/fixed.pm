@@ -22,6 +22,6 @@ XSLoader::load(
     __PACKAGE__,
     $fixed::{VERSION} ? ${ $fixed::{VERSION} } : (),
 );
- 
- 
+
 1;
+__END__
